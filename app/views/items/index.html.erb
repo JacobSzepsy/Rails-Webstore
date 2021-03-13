@@ -1,0 +1,27 @@
+<header>
+	<%= stylesheet_link_tag 'home' %>
+</header>
+<body class=''>
+	<%= render 'components/navbar', page: 'home' %>
+	<div class='d-flex flex-row' style='align-content: start'>
+		<div class='text-center' style='width: 15%'>
+			<div class='d-inline-block text-left'>
+				<h4 class='mb-3'>Categories</h4>
+				<% @categories.each do |category| %>
+					<div class='mb-3'>
+						<%= link_to category, root_path, class: 'text-dark'%>
+					</div>
+				<% end %>
+			</div>
+		</div>
+		<div class='container-fluid w-75'>
+		<% @items.each_slice(3) do |items| %>
+			<div class = 'row justify-content-around mb-5'>
+				<% items.each do |item| %>
+					<%= render 'item', item: item %>
+				<% end %>
+			</div>
+		<% end %>
+		</div>
+	</div>
+</body>
