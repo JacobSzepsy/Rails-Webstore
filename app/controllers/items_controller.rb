@@ -7,68 +7,97 @@ class ItemsController < ApplicationController
     ]
     @items = [
       {
+        id: 1,
         name: 'some product',
         image: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
         rating: rand(6),
         reviewCount: rand(1..3000),
-        price: '$59.99'
+        price: 6
       },
       {
+        id: 1,
         name: 'some product',
         image: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
         rating: rand(6),
         reviewCount: rand(1..3000),
-        price: '$59.99'
+        price: 5999
       },
       {
+        id: 1,
         name: 'some product',
         image: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
         rating: rand(6),
         reviewCount: rand(1..3000),
-        price: '$59.99'
+        price: 5999
       },
       {
+        id: 1,
         name: 'some product',
         image: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
         rating: rand(6),
         reviewCount: rand(1..3000),
-        price: '$59.99'
+        price: 5999
       },
       {
+        id: 1,
         name: 'some product',
         image: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
         rating: rand(6),
         reviewCount: rand(1..3000),
-        price: '$59.99'
+        price: 5999
       },
       {
+        id: 1,
         name: 'some product',
         image: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
         rating: rand(6),
         reviewCount: rand(1..3000),
-        price: '$59.99'
+        price: 59999
       },
       {
+        id: 1,
         name: 'some product',
         image: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
         rating: rand(6),
         reviewCount: rand(1..3000),
-        price: '$59.99'
+        price: 5999
       },
       {
+        id: 1,
         name: 'some product',
         image: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
         rating: rand(6),
         reviewCount: rand(1..3000),
-        price: '$59.99'
+        price: 5999
       }
     ]
   end
 
   def create
-    puts 'hello'
-    file = item_params[:image].tempfile.open.read.force_encoding(Encoding::UTF_8)
-    puts Base64.encode64(file)
+    # TODO host image with url to allow stripe integration
+
+    # Process input data
+    file = item_params[:image].read()
+    cost = item_params[:cost].gsub(/[.,]/,'').to_i
+
+    # Create stripe product data
+    product = Stripe::Product.create({name: item_params[:name]})
+    price = Stripe::Price.create({
+      unit_amount: cost,
+      currency: 'usd',
+      product: product[:id]
+    })
+
+    # Create item
+    @item = Item.create(
+      name: item_params[:name],
+      cost: cost,
+      description: item_params[:description],
+      image: item_params[:image],
+      price_id: price[:id]
+    )
+
+    redirect_to @item
   end
 
   def new

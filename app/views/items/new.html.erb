@@ -30,7 +30,12 @@
 		}
 
 		function updateCost(input){
-			document.getElementById('item-cost').innerHTML = `$${input}`;
+			const rawInput = input.replace('$','').replace('.', '').replaceAll(',', '');
+			console.log(rawInput)
+			const formattedCost = new Intl.NumberFormat('en', {style: 'currency', currency: 'USD'}).format(rawInput / 100);
+			console.log(formattedCost);
+			document.getElementById('item-cost').innerHTML = formattedCost;
+			document.getElementById('item_cost').value = formattedCost.substring(1,formattedCost.length);
 		}
 
 		function updateDescription(input){
@@ -46,7 +51,7 @@
 			<div class='mt-3'>
 				<b id='item-name'>Item name</b><br>
 				<span id='item-cost' class='text-secondary'><em>$0.00</em></span><br><br>
-				<span id='item-description'>Description</span>
+				<p id='item-description'>Description</p>
 			</div>
 		</div>
 	</div>
