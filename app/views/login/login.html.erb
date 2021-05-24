@@ -2,10 +2,9 @@
 	<header>
 		<%= stylesheet_link_tag 'index' %>
 	</header>
-	<body>
-		<%= render 'components/navbar', page: 'pricing' %>
-
-		<div class="d-flex flex-column justify-content-center" id="login-form">
+	<body class='d-flex flex-column'>
+		<%= render 'components/navbar', page: 'login' %>
+		<div class="d-flex flex-column justify-content-center flex-grow-1" id="login-form">
 			<%= form_with url: "/login", method: :post do |f| %>
 				<div class="mb-3">
 					<%= f.label :username, "Username", class: "form-label" %>
@@ -19,9 +18,6 @@
 					<%= f.submit "Login", class: "btn btn-primary" %>
 				</div>
 			<% end %>
-			<div class="text-center">
-				<%= link_to "Don't have an account? Register!", root_path, class: "text-dark" %>
-			</div>
 		</div>
 	</body>
 </html>

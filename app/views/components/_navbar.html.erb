@@ -5,17 +5,43 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav mr-auto">
         <li class="nav-item">
 			    <%= link_to "Home", root_path, class: "nav-link #{'active disabled' if page === 'home'}" %>
         </li>
-        <li class="nav-item">
-			    <%= link_to "Orders", root_path, class: "nav-link #{'active disabled' if page === 'orders'}" %>
-        </li>
-        <li class="nav-item">
-			    <%= link_to "Dashboard", admin_path, class: "nav-link #{'active disabled' if page === 'dashboard'}" %>
+        <% if logged_in? %>
+          <li class="nav-item">
+			      <%= link_to "New Item", new_item_path, class: "nav-link #{'active disabled' if page === 'new_item'}" %>
+          </li>
+        <% end %>
+      </ul>
+      <ul class='navbar-nav'>
+        <% if !logged_in? and page != 'login' %>
+          <li class="nav-item mr-3">
+           <%= link_to "Login", login_path, class: "nav-link active" %>
+          </li>
+        <% end %>
+        <li class='nav-item'>
+          <%= link_to cart_index_url do%>
+            <span class="fa-layers fa-fw fa-2x">
+              <i class="fas fa-shopping-basket fa-inverse"></i>
+              <%
+                session[:cart] ||= Hash.new() 
+                if session[:cart].size() > 0 
+              %>
+                <span class="fa-layers-counter fa-lg" style="background:Tomato"><%= 
+                  count = 0
+                  session[:cart].each_value do |item|
+                    count = count + item['quantity']
+                  end
+                  count
+                %></span>
+              <% end %>
+            </span>
+          <% end %>
         </li>
       </ul>
+      
     </div>
   </div>
 </nav>

@@ -1,0 +1,29 @@
+<script>
+	function updateQuantity(value, id) {
+		$.ajax({
+			url: `cart/${id}`,
+			type: value > 0 ? 'PATCH' : 'DELETE',
+			data: value > 0 ? { quantity: value } : undefined,
+		})
+	}	
+</script>
+<div class='d-flex flex-row mb-3 justify-content-between'>
+	<div class='d-flex flex-row'>
+		<%= link_to image_tag("data:image/jpeg;base64,#{lineItem['image']}", class: 'rounded mr-3', size: '200x200'), item_path(id: lineItem['id']) %> <br>
+		<div>
+			<h4><%= lineItem['name'] %></h4>
+			<%= 
+				options = (0..10).map { |i| [i, i] }
+				if lineItem['quantity'] > 10
+					puts('hi')
+					options.push(lineItem['quantity'])
+				end
+
+				select_tag "quantity", options_for_select(options, selected: lineItem['quantity']), class: 'form-control form-control-sm', onchange: "updateQuantity(this.value, '#{lineItem['price_id']}')" 
+			%>
+		</div>
+	</div>
+	<div class='d-flex flex-row'>
+		<h5><%= number_to_currency(lineItem['quantity'] * lineItem['cost'] / 100.0) %></h5>
+	</div>
+</div>

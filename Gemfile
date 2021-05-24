@@ -19,6 +19,7 @@ gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.7'
 gem "font-awesome-rails"
 gem 'rexml'
+gem 'stripe', '5.32.1'
 
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'

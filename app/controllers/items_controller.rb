@@ -1,76 +1,11 @@
 class ItemsController < ApplicationController
+
+  before_action :authenticate, except: [:index, :show]
+
   def index
-    @categories = [
-      'appareal',
-      'electronics',
-      'some random stuff'
-    ]
-    @items = [
-      {
-        id: 1,
-        name: 'some product',
-        image: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
-        rating: rand(6),
-        reviewCount: rand(1..3000),
-        price: 6
-      },
-      {
-        id: 1,
-        name: 'some product',
-        image: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
-        rating: rand(6),
-        reviewCount: rand(1..3000),
-        price: 5999
-      },
-      {
-        id: 1,
-        name: 'some product',
-        image: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
-        rating: rand(6),
-        reviewCount: rand(1..3000),
-        price: 5999
-      },
-      {
-        id: 1,
-        name: 'some product',
-        image: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
-        rating: rand(6),
-        reviewCount: rand(1..3000),
-        price: 5999
-      },
-      {
-        id: 1,
-        name: 'some product',
-        image: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
-        rating: rand(6),
-        reviewCount: rand(1..3000),
-        price: 5999
-      },
-      {
-        id: 1,
-        name: 'some product',
-        image: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
-        rating: rand(6),
-        reviewCount: rand(1..3000),
-        price: 59999
-      },
-      {
-        id: 1,
-        name: 'some product',
-        image: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
-        rating: rand(6),
-        reviewCount: rand(1..3000),
-        price: 5999
-      },
-      {
-        id: 1,
-        name: 'some product',
-        image: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
-        rating: rand(6),
-        reviewCount: rand(1..3000),
-        price: 5999
-      }
-    ]
+    # @page = params[:page] ? params[:page] : 0
+    # @items = Item.all.limit(3).offset(@page * 3)
+    @items = Item.all
   end
 
   def create
@@ -79,7 +14,8 @@ class ItemsController < ApplicationController
     # Process input data
     file = item_params[:image].read()
     cost = item_params[:cost].gsub(/[.,]/,'').to_i
-
+    image = Base64.encode64(file)
+  
     # Create stripe product data
     product = Stripe::Product.create({name: item_params[:name]})
     price = Stripe::Price.create({
@@ -89,15 +25,19 @@ class ItemsController < ApplicationController
     })
 
     # Create item
-    @item = Item.create(
+    @item = Item.new(
       name: item_params[:name],
       cost: cost,
       description: item_params[:description],
-      image: item_params[:image],
+      image: image,
       price_id: price[:id]
     )
 
-    redirect_to @item
+    if @item.save
+      redirect_to @item
+    else
+      render 'new'
+    end
   end
 
   def new
@@ -118,5 +58,9 @@ class ItemsController < ApplicationController
   private
     def item_params
       params.require(:item).permit(:name, :cost, :description, :image)
+    end
+
+    def authenticate
+      redirect_to login_path unless logged_in?
     end
 end
