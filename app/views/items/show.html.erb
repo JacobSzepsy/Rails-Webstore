@@ -1,0 +1,22 @@
+<body>
+	<%= render 'components/navbar', page: 'show' %>
+	<div class='d-flex justify-content-center align-items-center'>
+		<div class='d-flex flex-row mx-3 justify-content-center w-75'>
+			<%= image_tag("data:image/jpeg;base64,#{@item.image}", class: 'rounded mr-5', size: '750x750') %>
+			<div class='d-flex flex-column w-100 align-items-center justify-content-center'>
+				<h1 class='display-2'><%= @item.name %></h1>
+				<p class='h5 text-center'><%= @item.description %></p>
+				<p class='h5'><%= number_to_currency(@item.cost / 100.0) %></p>
+				<br>
+				<%= form_with url: "/cart", method: :post do |f| %>
+					<div class='d-flex flex-row align-items-center'>
+						<%= f.hidden_field :id, value: @item.price_id %>
+						<%= f.select :quantity, options_for_select((1..10).map { |i| [i, i] }), {}, class: 'form-control mr-3'%>
+						<%= f.submit "add to cart", class: "btn btn-dark" %>
+					</div>
+				<% end %>
+				<%# price_id %>
+			</div>
+		</div>
+	</div>
+</body>

@@ -1,0 +1,24 @@
+<html>
+	<header>
+		<%= stylesheet_link_tag 'index' %>
+	</header>
+	<body class='d-flex flex-column'>
+		<%= render 'components/navbar', page: 'login' %>
+		<div class="d-flex flex-column justify-content-center flex-grow-1" id="login-form">
+			<%= form_with url: "/login", method: :post do |f| %>
+				<div class="mb-3">
+					<%= f.label :username, "Username", class: "form-label" %>
+					<%= f.text_field :username, class: "form-control" %>
+				</div>
+				<div class="mb-3">
+					<%= f.label :password, "Password", class: "form-label" %>
+					<%= f.password_field :password, class: "form-control" %>
+				</div>
+				<div class="mb-3">
+					<%= f.submit "Login", class: "btn btn-primary" %>
+				</div>
+			<% end %>
+		</div>
+	</body>
+</html>
+
